@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  nursery-mysql:
+    image: mysql:8.0
+    container_name: nursery_marketplace_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: nursery_ecommerce
+      MYSQL_USER: nursery_admin
+      MYSQL_PASSWORD: nursery_secret_pw
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nursery_network
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  nursery_network:
+    driver: bridge
